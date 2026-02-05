@@ -122,13 +122,25 @@ function showNextQuestion(questionNumber) {
 
 // Function to move the "No" button when clicked
 function moveButton(button) {
-    const x = Math.random() * (window.innerWidth - button.offsetWidth);
-    const y = Math.random() * (window.innerHeight - button.offsetHeight);
     button.style.position = 'fixed';
-    button.style.left = x + 'px';
-    button.style.top = y + 'px';
-}
 
+    document.addEventListener('mousemove', (e) => {
+        const rect = button.getBoundingClientRect();
+
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 100) {
+            const x = Math.random() * (window.innerWidth - rect.width);
+            const y = Math.random() * (window.innerHeight - rect.height);
+
+            button.style.left = x + 'px';
+            button.style.top = y + 'px';
+        }
+    });
+}
 // Love meter functionality
 const loveMeter = document.getElementById('loveMeter');
 const loveValue = document.getElementById('loveValue');

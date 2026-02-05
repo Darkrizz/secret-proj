@@ -122,19 +122,31 @@ function showNextQuestion(questionNumber) {
 
 // Function to move the "No" button when clicked
 function moveButton(button) {
+    const step = 40;        // how far it moves per escape
+    const trigger = 120;    // how close the cursor must be
+
     button.style.position = 'fixed';
 
     document.addEventListener('mousemove', (e) => {
         const rect = button.getBoundingClientRect();
 
-        const dx = e.clientX - (rect.left + rect.width / 2);
-        const dy = e.clientY - (rect.top + rect.height / 2);
+        const bx = rect.left + rect.width / 2;
+        const by = rect.top + rect.height / 2;
+
+        const dx = bx - e.clientX;
+        const dy = by - e.clientY;
 
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 100) {
-            const x = Math.random() * (window.innerWidth - rect.width);
-            const y = Math.random() * (window.innerHeight - rect.height);
+        if (distance < trigger) {
+            const angle = Math.atan2(dy, dx);
+
+            let x = rect.left + Math.cos(angle) * step;
+            let y = rect.top + Math.sin(angle) * step;
+
+            // keep it on screen
+            x = Math.max(0, Math.min(window.innerWidth - rect.width, x));
+            y = Math.max(0, Math.min(window.innerHeight - rect.height, y));
 
             button.style.left = x + 'px';
             button.style.top = y + 'px';
